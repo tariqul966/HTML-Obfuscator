@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Code Obfuscator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      padding: 2rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+      color: #38bdf8;
+    }
+
+    p.subtitle {
+      color: #94a3b8;
+      margin-bottom: 2rem;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .editor-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    label {
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    textarea {
+      width: 100%;
+      height: 350px;
+      background-color: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 1rem;
+      color: #f8fafc;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #38bdf8;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background-color: #0284c7;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: #0369a1;
+    }
+
+    .btn-secondary {
+      background-color: #334155;
+      color: #f8fafc;
+    }
+
+    .btn-secondary:hover {
+      background-color: #475569;
+    }
+
+    .toast {
+      margin-top: 1rem;
+      color: #4ade80;
+      font-weight: 500;
+      min-height: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>HTML Obfuscator</h1>
+  <p class="subtitle">Convert your HTML code into unreadable, auto-executing JavaScript.</p>
+
+  <div class="container">
+    <div class="editor-box">
+      <label for="input-html">Source HTML</label>
+      <textarea id="input-html" placeholder="Paste your HTML code here..."></textarea>
+    </div>
+
+    <div class="editor-box">
+      <label for="output-html">Obfuscated Code</label>
+      <textarea id="output-html" placeholder="Obfuscated output will appear here..." readonly></textarea>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn-primary" onclick="obfuscateHTML()">Obfuscate HTML</button>
+    <button class="btn-secondary" onclick="copyToClipboard()">Copy Output</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    function obfuscateHTML() {
+      const input = document.getElementById('input-html').value;
+      const toast = document.getElementById('toast');
+
+      if (!input.trim()) {
+        toast.style.color = '#f87171';
+        toast.textContent = 'Please enter HTML content to obfuscate.';
+        return;
+      }
+
+      // Convert characters into comma-separated ASCII codes
+      const charCodes = [];
+      for (let i = 0; i < input.length; i++) {
+        charCodes.push(input.charCodeAt(i));
+      }
+
+      // Generate self-executing JavaScript decoder script
+      const obfuscatedCode = `<script type="text/javascript">
+  document.write(String.fromCharCode(${charCodes.join(',')}));
+<\/script>`;
+
+      document.getElementById('output-html').value = obfuscatedCode;
+      toast.style.color = '#4ade80';
+      toast.textContent = 'HTML obfuscated successfully!';
+    }
+
+    function copyToClipboard() {
+      const output = document.getElementById('output-html');
+      const toast = document.getElementById('toast');
+
+      if (!output.value) {
+        toast.style.color = '#f87171';
+        toast.textContent = 'Nothing to copy!';
+        return;
+      }
+
+      output.select();
+      navigator.clipboard.writeText(output.value);
+      toast.style.color = '#4ade80';
+      toast.textContent = 'Copied to clipboard!';
+    }
+  </script>
+
+</body>
+</html>
